@@ -1,5 +1,8 @@
 package org.docencia.hotel.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.docencia.hotel.domain.model.Guest;
 import org.docencia.hotel.domain.model.GuestPreferences;
 import org.docencia.hotel.mapper.jpa.GuestMapper;
@@ -11,9 +14,6 @@ import org.docencia.hotel.persistence.repository.nosql.GuestPreferencesRepositor
 import org.docencia.hotel.service.api.GuestService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class GuestServiceImpl implements GuestService {
@@ -33,6 +33,12 @@ public class GuestServiceImpl implements GuestService {
         this.guestPreferencesMapper = guestPreferencesMapper;
     }
 
+    /**
+     * crea un nuevo huesped en el sistema (polyglot: jpa + mongodb)
+     * 
+     * @param guest el huesped a crear incluyendo preferencias
+     * @return Guest
+     */
     @Override
     @Transactional
     public Guest createGuest(Guest guest) {
@@ -48,11 +54,18 @@ public class GuestServiceImpl implements GuestService {
         return getGuestById(entity.getId());
     }
 
+    /**
+     * actualiza un huesped existente (datos en jpa y preferencias en mongodb)
+     * 
+     * @param id el id del huesped a actualizar
+     * @param guest los nuevos datos del huesped
+     * @return Guest
+     */
     @Override
     @Transactional
     public Guest updateGuest(Long id, Guest guest) {
         GuestEntity entity = guestJpaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Huésped no encontrado con ID: " + id));
+                .orElseThrow(() -> new RuntimeException("huesped no encontrado con id: " + id));
 
         entity.setFullName(guest.getFullName());
         entity.setEmail(guest.getEmail());
@@ -74,10 +87,16 @@ public class GuestServiceImpl implements GuestService {
         return getGuestById(id);
     }
 
+    /**
+     * obtiene un huesped por su id incluyendo sus preferencias
+     * 
+     * @param id el id del huesped
+     * @return Guest
+     */
     @Override
     public Guest getGuestById(Long id) {
         GuestEntity entity = guestJpaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Huésped no encontrado con ID: " + id));
+                .orElseThrow(() -> new RuntimeException("huesped no encontrado con id: " + id));
         Guest guest = guestMapper.toDomain(entity);
 
         guestPreferencesRepository.findByGuestId(id).ifPresent(doc -> {
@@ -88,6 +107,11 @@ public class GuestServiceImpl implements GuestService {
         return guest;
     }
 
+    /**
+     * obtiene todos los huéspedes del sistema con sus preferencias
+     * 
+     * @return List
+     */
     @Override
     public List<Guest> getAllGuests() {
         return guestJpaRepository.findAll().stream()
@@ -100,11 +124,16 @@ public class GuestServiceImpl implements GuestService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * elimina un huesped del sistema (datos en jpa y preferencias en mongodb)
+     * 
+     * @param id el id del huesped a eliminar
+     */
     @Override
     @Transactional
     public void deleteGuest(Long id) {
         if (!guestJpaRepository.existsById(id)) {
-            throw new RuntimeException("Huésped no encontrado con ID: " + id);
+            throw new RuntimeException("huesped no encontrado con id: " + id);
         }
         guestPreferencesRepository.deleteByGuestId(id);
         guestJpaRepository.deleteById(id);

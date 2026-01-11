@@ -1,5 +1,8 @@
 package org.docencia.hotel.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.docencia.hotel.domain.model.Hotel;
 import org.docencia.hotel.mapper.jpa.HotelMapper;
 import org.docencia.hotel.persistence.jpa.entity.HotelEntity;
@@ -7,9 +10,6 @@ import org.docencia.hotel.persistence.repository.jpa.HotelRepository;
 import org.docencia.hotel.service.api.HotelService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class HotelServiceImpl implements HotelService {
@@ -22,6 +22,12 @@ public class HotelServiceImpl implements HotelService {
         this.hotelMapper = hotelMapper;
     }
 
+    /**
+     * crea un nuevo hotel en el sistema
+     *
+     * @param hotel el hotel a crear
+     * @return Hotel
+     */
     @Override
     @Transactional
     public Hotel createHotel(Hotel hotel) {
@@ -30,6 +36,13 @@ public class HotelServiceImpl implements HotelService {
         return hotelMapper.toDomain(entity);
     }
 
+    /**
+     * actualiza un hotel existente
+     *
+     * @param id el id del hotel a actualizar
+     * @param hotel los nuevos datos del hotel
+     * @return Hotel
+     */
     @Override
     @Transactional
     public Hotel updateHotel(Long id, Hotel hotel) {
@@ -39,16 +52,27 @@ public class HotelServiceImpl implements HotelService {
                     entity.setAddress(hotel.getAddress());
                     return hotelMapper.toDomain(hotelRepository.save(entity));
                 })
-                .orElseThrow(() -> new RuntimeException("Hotel no encontrado con ID: " + id));
+                .orElseThrow(() -> new RuntimeException("hotel no encontrado con id: " + id));
     }
 
+    /**
+     * obtiene un hotel por su id
+     *
+     * @param id el id del hotel
+     * @return Hotel
+     */
     @Override
     public Hotel getHotelById(Long id) {
         return hotelRepository.findById(id)
                 .map(hotelMapper::toDomain)
-                .orElseThrow(() -> new RuntimeException("Hotel no encontrado con ID: " + id));
+                .orElseThrow(() -> new RuntimeException("hotel no encontrado con id: " + id));
     }
 
+    /**
+     * obtiene todos los hoteles del sistema
+     *
+     * @return List
+     */
     @Override
     public List<Hotel> getAllHotels() {
         return hotelRepository.findAll().stream()
@@ -56,11 +80,16 @@ public class HotelServiceImpl implements HotelService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * elimina un hotel del sistema
+     *
+     * @param id el id del hotel a eliminar
+     */
     @Override
     @Transactional
     public void deleteHotel(Long id) {
         if (!hotelRepository.existsById(id)) {
-            throw new RuntimeException("Hotel no encontrado con ID: " + id);
+            throw new RuntimeException("hotel no encontrado con id: " + id);
         }
         hotelRepository.deleteById(id);
     }

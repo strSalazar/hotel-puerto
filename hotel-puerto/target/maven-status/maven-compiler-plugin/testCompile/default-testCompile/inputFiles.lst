@@ -1,1 +1,12 @@
-/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/SmokeTest.java
+/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/HotelAplicationTest.java
+/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/domain/impl/BookingDomainImplTest.java
+/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/domain/impl/GuestDomainImplTest.java
+/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/domain/impl/HotelDomainImplTest.java
+/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/domain/impl/RoomDomainImplTest.java
+/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/mapper/MapperTests.java
+/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/service/impl/BookingServiceImplTest.java
+/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/service/impl/GuestServiceImplTest.java
+/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/service/impl/HotelServiceImplTest.java
+/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/service/impl/RoomServiceImplTest.java
+/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/web/rest/GuestControllerTest.java
+/home/salazar/hotel-puerto/hotel-puerto/src/test/java/org/docencia/hotel/web/soap/GuestSoapServiceImplTest.java

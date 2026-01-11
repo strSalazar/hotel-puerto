@@ -1,1 +1,12 @@
-org/docencia/hotel/EjemploTest.class
+org/docencia/hotel/domain/impl/HotelDomainImplTest.class
+org/docencia/hotel/mapper/MapperTests.class
+org/docencia/hotel/service/impl/HotelServiceImplTest.class
+org/docencia/hotel/domain/impl/BookingDomainImplTest.class
+org/docencia/hotel/HotelApplicationTests.class
+org/docencia/hotel/web/rest/GuestControllerTest.class
+org/docencia/hotel/service/impl/GuestServiceImplTest.class
+org/docencia/hotel/domain/impl/GuestDomainImplTest.class
+org/docencia/hotel/domain/impl/RoomDomainImplTest.class
+org/docencia/hotel/service/impl/RoomServiceImplTest.class
+org/docencia/hotel/web/soap/GuestSoapServiceImplTest.class
+org/docencia/hotel/service/impl/BookingServiceImplTest.class

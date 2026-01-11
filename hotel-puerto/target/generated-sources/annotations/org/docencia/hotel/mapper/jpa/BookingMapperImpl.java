@@ -3,12 +3,14 @@ package org.docencia.hotel.mapper.jpa;
 import javax.annotation.processing.Generated;
 import org.docencia.hotel.domain.model.Booking;
 import org.docencia.hotel.persistence.jpa.entity.BookingEntity;
+import org.docencia.hotel.persistence.jpa.entity.GuestEntity;
+import org.docencia.hotel.persistence.jpa.entity.RoomEntity;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-11T16:57:45+0000",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260101-2150, environment: Java 21.0.9 (Eclipse Adoptium)"
+    date = "2026-01-11T19:36:44+0000",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.9 (Eclipse Adoptium)"
 )
 @Component
 public class BookingMapperImpl implements BookingMapper {
@@ -36,10 +38,42 @@ public class BookingMapperImpl implements BookingMapper {
 
         Booking booking = new Booking();
 
+        booking.setRoomId( entityRoomId( entity ) );
+        booking.setGuestId( entityGuestId( entity ) );
         booking.setId( entity.getId() );
         booking.setCheckIn( entity.getCheckIn() );
         booking.setCheckOut( entity.getCheckOut() );
 
         return booking;
+    }
+
+    private Long entityRoomId(BookingEntity bookingEntity) {
+        if ( bookingEntity == null ) {
+            return null;
+        }
+        RoomEntity room = bookingEntity.getRoom();
+        if ( room == null ) {
+            return null;
+        }
+        Long id = room.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
+    }
+
+    private Long entityGuestId(BookingEntity bookingEntity) {
+        if ( bookingEntity == null ) {
+            return null;
+        }
+        GuestEntity guest = bookingEntity.getGuest();
+        if ( guest == null ) {
+            return null;
+        }
+        Long id = guest.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
     }
 }
