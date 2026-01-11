@@ -12,6 +12,9 @@ import org.docencia.hotel.service.api.GuestService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class GuestServiceImpl implements GuestService {
 
@@ -46,9 +49,35 @@ public class GuestServiceImpl implements GuestService {
     }
 
     @Override
+    @Transactional
+    public Guest updateGuest(Long id, Guest guest) {
+        GuestEntity entity = guestJpaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Huésped no encontrado con ID: " + id));
+
+        entity.setFullName(guest.getFullName());
+        entity.setEmail(guest.getEmail());
+        entity.setPhone(guest.getPhone());
+        guestJpaRepository.save(entity);
+
+        if (guest.getPreferences() != null) {
+            GuestPreferencesDocument doc = guestPreferencesRepository.findByGuestId(id)
+                    .orElse(new GuestPreferencesDocument());
+
+            doc.setGuestId(id);
+            doc.setRoomTypePreference(guest.getPreferences().getRoomTypePreference());
+            doc.setDietaryRequirements(guest.getPreferences().getDietaryRequirements());
+            doc.setVip(guest.getPreferences().isVip());
+
+            guestPreferencesRepository.save(doc);
+        }
+
+        return getGuestById(id);
+    }
+
+    @Override
     public Guest getGuestById(Long id) {
         GuestEntity entity = guestJpaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Guest not found: " + id));
+                .orElseThrow(() -> new RuntimeException("Huésped no encontrado con ID: " + id));
         Guest guest = guestMapper.toDomain(entity);
 
         guestPreferencesRepository.findByGuestId(id).ifPresent(doc -> {
@@ -57,5 +86,27 @@ public class GuestServiceImpl implements GuestService {
         });
 
         return guest;
+    }
+
+    @Override
+    public List<Guest> getAllGuests() {
+        return guestJpaRepository.findAll().stream()
+                .map(entity -> {
+                    Guest guest = guestMapper.toDomain(entity);
+                    guestPreferencesRepository.findByGuestId(entity.getId())
+                            .ifPresent(doc -> guest.setPreferences(guestPreferencesMapper.toDomain(doc)));
+                    return guest;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void deleteGuest(Long id) {
+        if (!guestJpaRepository.existsById(id)) {
+            throw new RuntimeException("Huésped no encontrado con ID: " + id);
+        }
+        guestPreferencesRepository.deleteByGuestId(id);
+        guestJpaRepository.deleteById(id);
     }
 }
