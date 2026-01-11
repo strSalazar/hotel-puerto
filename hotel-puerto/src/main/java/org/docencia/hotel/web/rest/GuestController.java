@@ -5,6 +5,7 @@ import org.docencia.hotel.domain.model.Guest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,14 +21,20 @@ public class GuestController {
     }
 
     @Operation(summary = "Obtener huésped por id")
-    @GetMapping("/<built-in function id>")
+    @GetMapping("/{id}")
     public ResponseEntity<Guest> findById(@PathVariable Long id) {
-        throw new UnsupportedOperationException("TODO");
+        try {
+            Guest guest = guestDomain.getGuest(id);
+            return ResponseEntity.ok(guest);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Operation(summary = "Guardar huésped")
     @PostMapping
     public ResponseEntity<Guest> save(@Valid @RequestBody Guest guest) {
-        throw new UnsupportedOperationException("TODO");
+        Guest saved = guestDomain.registerGuest(guest);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 }

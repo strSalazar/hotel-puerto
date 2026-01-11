@@ -22,11 +22,11 @@ public class GuestSoapServiceImpl implements GuestSoapService {
 
     @Override
     public Guest getGuestById(Long id) {
-        throw new UnsupportedOperationException("TODO");
+        return guestDomain.getGuest(id);
     }
 
     @Override
     public Guest saveGuest(Guest guest) {
-        throw new UnsupportedOperationException("TODO");
+        return guestDomain.registerGuest(guest);
     }
 }
